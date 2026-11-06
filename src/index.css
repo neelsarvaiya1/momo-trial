@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-warm-white: #FAF8F4;
+  --color-dough-cream: #F2E6D5;
+  --color-chili-red: #D93825;
+  --color-deep-charcoal: #181818;
+  --color-fresh-green: #748A50;
+  
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Craft floor: browser surfaces */
+::selection {
+  background-color: #D93825;
+  color: #FFFFFF;
+}
+
+::-moz-selection {
+  background-color: #D93825;
+  color: #FFFFFF;
+}
+
+html {
+  background-color: #FAF8F4;
+  color: #181818;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF8F4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E8D9C5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D93825;
+}
+
+/* Tabular numerals for prices and counts */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Emil Kowalski Button Tactile Feedback */
+.btn-press {
+  transition: transform 160ms var(--ease-out), background-color 200ms ease, box-shadow 200ms ease;
+  will-change: transform;
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Anti-aliased heading balance */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
