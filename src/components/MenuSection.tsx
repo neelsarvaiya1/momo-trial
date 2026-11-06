@@ -237,3 +237,4 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
     </section>
   )
 }
+

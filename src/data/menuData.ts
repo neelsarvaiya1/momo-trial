@@ -121,3 +121,4 @@ export const INGREDIENT_STORIES: IngredientFeature[] = [
     image: '/assets/steamer.jpg',
   },
 ]
+

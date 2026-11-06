@@ -28,3 +28,4 @@ export interface IngredientFeature {
   badge: string
   image: string
 }
+

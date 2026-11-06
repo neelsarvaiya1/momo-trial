@@ -198,3 +198,4 @@ export const StorySection: React.FC = () => {
     </section>
   )
 }
+

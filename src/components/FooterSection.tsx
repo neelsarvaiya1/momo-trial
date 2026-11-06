@@ -268,3 +268,4 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
     </footer>
   )
 }
+

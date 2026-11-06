@@ -1,9 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
-import { ChevronDown, Volume2, VolumeX, Sparkles } from 'lucide-react'
-import { playTactileClick } from '../utils/audio'
+import { Volume2, VolumeX, Sparkles } from 'lucide-react'
+import { playTactileClick, startSteamAmbience, stopSteamAmbience } from '../utils/audio'
+import { HeroSequence } from './HeroSequence'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -13,109 +14,32 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
   const introTextRef = useRef<HTMLDivElement>(null)
   const midStoryRef = useRef<HTMLDivElement>(null)
   const endStoryRef = useRef<HTMLDivElement>(null)
   const progressBadgeRef = useRef<HTMLDivElement>(null)
 
-  const [videoLoaded, setVideoLoaded] = useState(false)
-  const [duration, setDuration] = useState(4.0)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [soundEnabled, setSoundEnabled] = useState(false)
-
-  const targetTimeRef = useRef(0)
-  const isSeekingRef = useRef(false)
-  const rafIdRef = useRef<number | null>(null)
-
-  // Handle video metadata
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const handleLoadedMetadata = () => {
-      if (video.duration && !isNaN(video.duration) && video.duration > 0) {
-        setDuration(video.duration)
-        setVideoLoaded(true)
-        video.currentTime = 0.001
-      }
-    }
-
-    const handleCanPlay = () => {
-      setVideoLoaded(true)
-    }
-
-    const handleSeeked = () => {
-      isSeekingRef.current = false
-      const currentVideo = videoRef.current
-      if (!currentVideo) return
-      
-      const diff = Math.abs(currentVideo.currentTime - targetTimeRef.current)
-      if (diff > 0.04) {
-        isSeekingRef.current = true
-        currentVideo.currentTime = targetTimeRef.current
-      }
-    }
-
-    video.addEventListener('loadedmetadata', handleLoadedMetadata)
-    video.addEventListener('canplay', handleCanPlay)
-    video.addEventListener('seeked', handleSeeked)
-
-    if (video.readyState >= 1) {
-      handleLoadedMetadata()
-    }
-
-    return () => {
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
-      video.removeEventListener('canplay', handleCanPlay)
-      video.removeEventListener('seeked', handleSeeked)
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
-    }
-  }, [])
-
-  // Smooth frame seek dispatcher
-  const dispatchSeek = (time: number) => {
-    targetTimeRef.current = time
-    const video = videoRef.current
-    if (!video || isSeekingRef.current) return
-
-    const diff = Math.abs(video.currentTime - time)
-    if (diff > 0.02) {
-      isSeekingRef.current = true
-      // Use fastSeek if supported for ultra-low latency, fallback to currentTime
-      const videoAny = video as HTMLVideoElement & { fastSeek?: (t: number) => void }
-      if (typeof videoAny.fastSeek === 'function') {
-        videoAny.fastSeek(time)
-      } else {
-        video.currentTime = time
-      }
-    }
-  }
+  const [isSequenceReady, setIsSequenceReady] = useState(false)
 
   useGSAP(
     () => {
-      if (!containerRef.current || !videoRef.current) return
+      if (!containerRef.current) return
 
-      const videoDuration = duration || 4.0
-
-      // Timeline for scrubbed video and layered editorial texts
+      // Pinned scroll section for Apple-style frame sequence scrub & editorial overlays
       const st = ScrollTrigger.create({
         trigger: containerRef.current,
         start: 'top top',
         end: '+=400%',
         pin: true,
-        scrub: 0.5, // 0.5s smoothing creates buttery Apple-style inertia
+        scrub: 0.4, // Responsive and buttery smooth scroll scrubbing
         anticipatePin: 1,
         onUpdate: (self) => {
           const p = self.progress
           setScrollProgress(p)
 
-          // Clamp target time: ensure last frame displays the giant momo at 1.0
-          const maxTime = Math.max(0.1, videoDuration - 0.04)
-          const target = Math.min(p * videoDuration, maxTime)
-          dispatchSeek(target)
-
-          // 1. Intro overlay animation (0.0 to 0.3)
+          // 1. Intro overlay animation (0.0 to 0.28)
           if (introTextRef.current) {
             if (p <= 0.28) {
               const fadeOut = gsap.utils.clamp(0, 1, 1 - p * 3.8)
@@ -133,7 +57,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
           // 2. Mid ingredients callouts (0.30 to 0.68)
           if (midStoryRef.current) {
             if (p >= 0.28 && p <= 0.70) {
-              // Fade in between 0.28-0.45, fade out between 0.55-0.70
               let midOpacity = 0
               if (p < 0.48) {
                 midOpacity = (p - 0.28) / 0.18
@@ -180,7 +103,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
         st.kill()
       }
     },
-    { dependencies: [duration], scope: containerRef }
+    { scope: containerRef }
   )
 
   const handleScrollDown = () => {
@@ -193,9 +116,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
 
   const toggleSound = () => {
     playTactileClick()
-    setSoundEnabled(!soundEnabled)
-    if (videoRef.current) {
-      videoRef.current.muted = soundEnabled // toggle muted state
+    const nextState = !soundEnabled
+    setSoundEnabled(nextState)
+
+    if (nextState) {
+      startSteamAmbience()
+    } else {
+      stopSteamAmbience()
     }
   }
 
@@ -211,32 +138,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
         {/* Subtle Ambient Vignette / Background Frame */}
         <div className="absolute inset-0 bg-[#FAF8F4] z-0" />
 
-        {/* Video Frame Container */}
+        {/* Apple-style Canvas Frame Sequence Container */}
         <div className="relative w-full h-full flex items-center justify-center z-10 overflow-hidden">
-          {/* Fallback & Poster image for instant paint */}
-          <img
-            src="/momo-poster.jpg"
-            alt="Handcrafted artisanal momo"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out-custom pointer-events-none z-10 ${
-              videoLoaded ? 'opacity-0' : 'opacity-100'
-            }`}
+          <HeroSequence
+            progress={scrollProgress}
+            onFirstFrameLoaded={() => setIsSequenceReady(true)}
+            className="w-full h-full"
           />
 
-          {/* The Hero Scroll Scrubbing Video */}
-          <video
-            ref={videoRef}
-            src="/momo.mp4"
-            muted
-            playsInline
-            preload="auto"
-            aria-label="Handcrafted momo unfolding in culinary motion"
-            className="w-full h-full object-cover object-center transition-all duration-75"
-            style={{
-              willChange: 'transform',
-            }}
-          />
-
-          {/* Cinematic subtle contrast gradient overlays - carefully kept away from the center food subject */}
+          {/* Cinematic subtle contrast gradient overlays */}
           <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[#FAF8F4]/85 via-[#FAF8F4]/40 to-transparent pointer-events-none z-20" />
           <div className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-[#FAF8F4]/95 via-[#FAF8F4]/50 to-transparent pointer-events-none z-20" />
         </div>
@@ -368,7 +278,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
           <button
             onClick={toggleSound}
             className="btn-press w-10 h-10 rounded-full bg-white/90 backdrop-blur-md border border-doughCream flex items-center justify-center text-deepCharcoal hover:text-chiliRed shadow-sm cursor-pointer"
-            title={soundEnabled ? 'Mute Video Audio' : 'Unmute Video Audio'}
+            title={soundEnabled ? 'Mute Bamboo Steam Sound' : 'Unmute Bamboo Steam Sound'}
             aria-label="Toggle audio"
           >
             {soundEnabled ? <Volume2 className="w-4 h-4 text-chiliRed" /> : <VolumeX className="w-4 h-4 text-deepCharcoal/60" />}

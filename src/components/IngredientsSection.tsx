@@ -164,3 +164,4 @@ export const IngredientsSection: React.FC = () => {
     </section>
   )
 }
+
