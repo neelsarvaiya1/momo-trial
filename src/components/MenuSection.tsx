@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
-import { Plus, Check, Flame, Leaf, Sparkles, Info } from 'lucide-react'
+import { Plus, Check, Flame, Sparkles } from 'lucide-react'
 import { MenuItem } from '../types'
 import { MENU_ITEMS } from '../data/menuData'
 import { playTactileClick, playAddSuccess } from '../utils/audio'
@@ -19,11 +19,11 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
   const [addedItemIds, setAddedItemIds] = useState<Record<string, boolean>>({})
 
   const categories = [
-    { id: 'all', label: 'Complete Collection' },
-    { id: 'steamed', label: 'Classic Steamed' },
-    { id: 'fried', label: 'Crispy & Fried' },
-    { id: 'tandoori', label: 'Clay Tandoori' },
-    { id: 'special', label: 'Wok Specialties' },
+    { id: 'all', label: 'All Dishes' },
+    { id: 'steamed', label: 'Steamed' },
+    { id: 'fried', label: 'Crispy Fried' },
+    { id: 'tandoori', label: 'Tandoori' },
+    { id: 'special', label: 'Wok Chilli' },
   ]
 
   const filteredItems =
@@ -38,12 +38,12 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
       const cards = containerRef.current.querySelectorAll('.menu-card')
       gsap.fromTo(
         cards,
-        { opacity: 0, y: 35 },
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          stagger: 0.1,
-          duration: 0.7,
+          stagger: 0.08,
+          duration: 0.6,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
@@ -59,7 +59,6 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
     playAddSuccess()
     onAddToCart(item)
 
-    // Visual button check animation
     setAddedItemIds((prev) => ({ ...prev, [item.id]: true }))
     setTimeout(() => {
       setAddedItemIds((prev) => ({ ...prev, [item.id]: false }))
@@ -70,7 +69,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
     <section
       ref={containerRef}
       id="menu"
-      className="relative w-full py-24 sm:py-32 bg-doughCream/30 border-t border-doughCream"
+      className="relative w-full py-24 sm:py-32 bg-[#F7F3EC]/50 border-t border-doughCream/70"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* Section Header */}
@@ -79,7 +78,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
             <div className="inline-flex items-center gap-2 mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-chiliRed" />
               <span className="text-xs uppercase font-bold tracking-widest text-deepCharcoal/70">
-                THE STEAM BASKET
+                THE MENU
               </span>
             </div>
             <h2 className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold text-deepCharcoal tracking-tight leading-[1.05]">
@@ -90,7 +89,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
           </div>
 
           <p className="font-sans text-sm sm:text-base text-deepCharcoal/75 max-w-md leading-relaxed">
-            Every order comes fresh out of tiered cedar and bamboo steamers, accompanied by our signature slow-simmered Himalayan chili chutney.
+            Freshly prepared, generously filled, and served hot with our house-crafted red chili and herbed dipping sauces.
           </p>
         </div>
 
@@ -99,6 +98,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
           {categories.map((cat) => (
             <button
               key={cat.id}
+              type="button"
               onClick={() => {
                 playTactileClick()
                 setSelectedCategory(cat.id)
@@ -114,26 +114,19 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
           ))}
         </div>
 
-        {/* Asymmetric / Dynamic Editorial Menu Grid */}
+        {/* Consistent Editorial Menu Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredItems.map((item, idx) => {
+          {filteredItems.map((item) => {
             const isAdded = addedItemIds[item.id]
-            const isFeatured = idx === 0 && selectedCategory === 'all'
 
             return (
               <div
                 key={item.id}
-                className={`menu-card group relative bg-white rounded-3xl p-6 border border-doughCream/80 shadow-sm hover:shadow-xl hover:border-chiliRed/40 transition-all duration-300 flex flex-col justify-between ${
-                  isFeatured ? 'md:col-span-2 lg:col-span-2' : ''
-                }`}
+                className="menu-card group relative bg-white rounded-3xl p-6 border border-doughCream/80 shadow-sm hover:shadow-xl hover:border-chiliRed/40 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  {/* Food Image with subtle zoom and border */}
-                  <div
-                    className={`relative w-full rounded-2xl overflow-hidden bg-doughCream/50 mb-5 ${
-                      isFeatured ? 'aspect-[16/9]' : 'aspect-[4/3]'
-                    }`}
-                  >
+                  {/* Food Image with consistent aspect ratio */}
+                  <div className="relative w-full rounded-2xl overflow-hidden bg-doughCream/40 mb-5 aspect-[4/3]">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -141,7 +134,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
                       className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     />
 
-                    {/* Veg / Non-Veg Badge */}
+                    {/* Veg / Non-Veg Indicator */}
                     <div className="absolute top-4 left-4 z-10">
                       <span
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase backdrop-blur-md shadow-sm ${
@@ -155,38 +148,42 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
                             item.isVeg ? 'bg-freshGreen' : 'bg-chiliRed'
                           }`}
                         />
-                        {item.isVeg ? 'Pure Veg' : 'Chicken / Meat'}
+                        {item.isVeg ? 'Vegetarian' : 'Chicken'}
                       </span>
                     </div>
 
-                    {/* Pieces tag */}
-                    <div className="absolute top-4 right-4 z-10">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wide bg-deepCharcoal/80 text-white backdrop-blur-md">
-                        {item.pieces} Pieces
-                      </span>
-                    </div>
+                    {/* Portion indicator */}
+                    {item.pieces && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wide bg-deepCharcoal/80 text-white backdrop-blur-md">
+                          {item.pieces} Pieces
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Title & Price Header */}
-                  <div className="flex items-start justify-between gap-4 mb-2">
+                  {/* Title & Exact '$-price' Placeholder Header */}
+                  <div className="flex items-baseline justify-between gap-4 mb-3">
                     <h3 className="font-serif text-2xl font-bold text-deepCharcoal group-hover:text-chiliRed transition-colors">
                       {item.name}
                     </h3>
-                    <span className="font-serif text-xl font-bold text-deepCharcoal tabular-nums">
-                      ${item.price.toFixed(2)}
+                    <span className="font-serif text-lg font-bold text-deepCharcoal tabular-nums tracking-wide shrink-0">
+                      {item.price}
                     </span>
                   </div>
 
-                  {/* Appetizing Description */}
+                  {/* Short Appetizing Description */}
                   <p className="font-sans text-sm text-deepCharcoal/70 leading-relaxed mb-4">
                     {item.description}
                   </p>
 
                   {/* Dip Pairing */}
-                  <div className="flex items-center gap-2 text-xs text-deepCharcoal/60 mb-5 bg-warmWhite p-2.5 rounded-xl border border-doughCream/60">
-                    <Sparkles className="w-3.5 h-3.5 text-chiliRed shrink-0" />
-                    <span>Includes: <strong className="text-deepCharcoal font-medium">{item.dip}</strong></span>
-                  </div>
+                  {item.dip && (
+                    <div className="flex items-center gap-2 text-xs text-deepCharcoal/60 mb-5 bg-[#FAF8F4] p-2.5 rounded-xl border border-doughCream/60">
+                      <Sparkles className="w-3.5 h-3.5 text-chiliRed shrink-0" />
+                      <span>Paired with: <strong className="text-deepCharcoal font-medium">{item.dip}</strong></span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Footer / Card Actions */}
@@ -206,8 +203,9 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
                     </span>
                   </div>
 
-                  {/* Add to Order Button with Emil Kowalski sub-300ms feedback */}
+                  {/* Add to Order Button */}
                   <button
+                    type="button"
                     onClick={() => handleAdd(item)}
                     className={`btn-press flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
                       isAdded
@@ -237,4 +235,3 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
     </section>
   )
 }
-

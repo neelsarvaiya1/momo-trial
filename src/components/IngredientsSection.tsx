@@ -12,11 +12,11 @@ export const IngredientsSection: React.FC = () => {
   const floatGroupRef = useRef<HTMLDivElement>(null)
 
   const rawIngredients = [
-    { name: 'Mountain Spring Water & Wheat', note: 'Cold kneaded for silky elasticity' },
-    { name: 'Crisp Sunrise Cabbage', note: 'Shredded paper-thin at 6 AM' },
-    { name: 'Wild Timur Pepper', note: 'Foraged in the Himalayan foothills' },
-    { name: 'Young Spring Onions & Ginger', note: 'Crushed and steeped in cold-pressed oil' },
-    { name: 'Slow-Infused Chili Crunch', note: 'Aged with star anise and roasted garlic' },
+    { name: 'Mountain Wheat Flour', note: 'Carefully kneaded for a soft, elastic dough' },
+    { name: 'Fresh Crisp Cabbage', note: 'Finely shredded and tossed with aromatics' },
+    { name: 'Aromatic Timur Pepper', note: 'Adds a gentle citrus zest and subtle tingle' },
+    { name: 'Fresh Ginger & Scallions', note: 'Crushed daily for authentic aroma' },
+    { name: 'Slow-Infused Chili Oil', note: 'Gently steeped with garlic and warm spices' },
   ]
 
   useGSAP(
@@ -79,7 +79,7 @@ export const IngredientsSection: React.FC = () => {
           </h2>
 
           <p className="font-sans text-base sm:text-lg text-deepCharcoal/75 leading-relaxed font-normal">
-            No frozen fillings. No artificial flavor enhancers. We source whole ingredients directly from organic farmers, hand-pound our mountain aromatics, and fold everything fresh for today's table.
+            No frozen fillings. No artificial flavor enhancers. We select fresh market produce, grind our spices in small batches, and fold every momo fresh for your table.
           </p>
         </div>
 
@@ -154,8 +154,8 @@ export const IngredientsSection: React.FC = () => {
               </div>
 
               <div className="p-4 rounded-2xl bg-white border border-doughCream text-xs text-deepCharcoal/80 leading-relaxed font-sans">
-                <strong className="text-deepCharcoal block mb-1">Zero Food Waste Policy</strong>
-                Every vegetable scrap and herb stem is slow-simmered into our savory aromatic dipping broth.
+                <strong className="text-deepCharcoal block mb-1">Prepared Fresh Daily</strong>
+                Every batch of dough is kneaded each morning, filled by hand, and steamed immediately when ordered.
               </div>
             </div>
           </div>

@@ -57,7 +57,7 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({ onOrderClick
               className="relative aspect-square sm:aspect-[4/3] lg:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/10 group"
             >
               <img
-                src="/momo-final.jpg"
+                src="/assets/signature-momo.webp"
                 alt="Signature Steaming Momo close up"
                 loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -76,7 +76,7 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({ onOrderClick
                     CHEF'S SIGNATURE CREATION
                   </span>
                   <span className="font-serif text-sm font-bold text-white block">
-                    The 24-Pleat Imperial Momo
+                    The Signature Momo
                   </span>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({ onOrderClick
             </h2>
 
             <p className="font-sans text-base sm:text-lg text-white/80 leading-relaxed font-light mb-8 max-w-xl">
-              An explosion of warm, comforting Himalayan broth encased in an ultra-thin veil of hand-pinched dough. Finished with a spoonful of hot roasted sesame chili crunch.
+              A burst of comforting savory broth encased in delicate handmade dough, complemented by our slow-steeped chili chutney.
             </p>
 
             {/* Tasting Notes */}
@@ -109,7 +109,7 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({ onOrderClick
                   TEXTURE
                 </span>
                 <span className="font-serif text-sm font-bold text-white">
-                  Silky & Translucent
+                  Silky & Tender
                 </span>
               </div>
               <div>
@@ -117,7 +117,7 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({ onOrderClick
                   AROMA PROFILE
                 </span>
                 <span className="font-serif text-sm font-bold text-white">
-                  Timur Citrus & Ginger
+                  Ginger & Toasted Sesame
                 </span>
               </div>
             </div>
@@ -125,6 +125,7 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({ onOrderClick
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <button
+                type="button"
                 onClick={() => {
                   playTactileClick()
                   onOrderClick()

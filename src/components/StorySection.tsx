@@ -15,17 +15,17 @@ export const StorySection: React.FC = () => {
   const pleatAnatomy = [
     {
       title: 'The Pleated Crown',
-      detail: 'A delicate spiraled seal pinched 24 times to lock in fragrant steam and hot savory broth.',
+      detail: 'A delicate spiraled seal pinched by hand to lock in fragrant steam and hot savory broth.',
       position: 'top-1/4 left-1/2',
     },
     {
-      title: 'Translucent 1mm Skin',
-      detail: 'Hand-rolled mountain wheat dough rolled ultra-thin for an ethereal, silky bite.',
+      title: 'Silky Dough Skin',
+      detail: 'Rolled gently to achieve a tender, melt-in-the-mouth texture that holds the filling without tearing.',
       position: 'bottom-1/3 left-1/3',
     },
     {
-      title: 'Heart of Aromatics',
-      detail: 'Sweet farm cabbage, wild timur pepper, ginger juice, and toasted sesame essence.',
+      title: 'Aromatic Heart',
+      detail: 'Crisp garden vegetables, fragrant ginger, garlic, and freshly cracked Himalayan peppercorns.',
       position: 'bottom-1/4 right-1/4',
     },
   ]
@@ -103,33 +103,33 @@ export const StorySection: React.FC = () => {
             </p>
 
             <p className="story-reveal font-sans text-base text-deepCharcoal/70 leading-relaxed max-w-2xl font-light mb-10">
-              Rooted in centuries-old Himalayan traditions, our kitchen rejects shortcuts. We roll our dough fresh every morning, hand-pinch every dumpling with 24 signature pleats, and steam each batch in natural bamboo baskets so the authentic aroma greets you before your first bite.
+              Rooted in Himalayan culinary traditions, our kitchen rejects shortcuts. We prepare our dough fresh daily, hand-shape every dumpling with care, and steam each batch in traditional bamboo baskets so the authentic aroma greets you before your first bite.
             </p>
 
             {/* Editorial Metrics */}
             <div className="story-reveal grid grid-cols-3 gap-6 pt-8 border-t border-doughCream/80">
-              <div>
-                <span className="block font-serif text-3xl sm:text-4xl font-bold text-deepCharcoal mb-1">
-                  24
-                </span>
-                <span className="block text-xs uppercase font-semibold tracking-wider text-deepCharcoal/60">
-                  Pleats per Momo
-                </span>
-              </div>
-              <div>
-                <span className="block font-serif text-3xl sm:text-4xl font-bold text-deepCharcoal mb-1">
-                  1mm
-                </span>
-                <span className="block text-xs uppercase font-semibold tracking-wider text-deepCharcoal/60">
-                  Dough Translucency
-                </span>
-              </div>
               <div>
                 <span className="block font-serif text-3xl sm:text-4xl font-bold text-chiliRed mb-1">
                   100%
                 </span>
                 <span className="block text-xs uppercase font-semibold tracking-wider text-deepCharcoal/60">
                   Handcrafted Daily
+                </span>
+              </div>
+              <div>
+                <span className="block font-serif text-3xl sm:text-4xl font-bold text-deepCharcoal mb-1">
+                  Fresh
+                </span>
+                <span className="block text-xs uppercase font-semibold tracking-wider text-deepCharcoal/60">
+                  Steamed to Order
+                </span>
+              </div>
+              <div>
+                <span className="block font-serif text-3xl sm:text-4xl font-bold text-deepCharcoal mb-1">
+                  Pure
+                </span>
+                <span className="block text-xs uppercase font-semibold tracking-wider text-deepCharcoal/60">
+                  Natural Ingredients
                 </span>
               </div>
             </div>
@@ -144,7 +144,7 @@ export const StorySection: React.FC = () => {
               {/* Authentic Visual from momo.mp4 */}
               <img
                 src="/assets/pleating.jpg"
-                alt="Close-up of handcrafting 24 momo pleats"
+                alt="Close-up of handcrafting delicate momo folds"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
 
@@ -163,6 +163,7 @@ export const StorySection: React.FC = () => {
                       {pleatAnatomy.map((_, i) => (
                         <button
                           key={i}
+                          type="button"
                           onClick={() => {
                             playTactileClick()
                             setActivePleatSpot(i)
@@ -188,9 +189,9 @@ export const StorySection: React.FC = () => {
 
             {/* Small Editorial Caption */}
             <div className="mt-4 flex items-center gap-3 text-xs text-deepCharcoal/60 uppercase font-semibold tracking-wider">
-              <span>Himalayan Mountain Recipe</span>
+              <span>Himalayan Culinary Tradition</span>
               <span>•</span>
-              <span>Bamboo Steamed at 100°C</span>
+              <span>Steamed in Bamboo Baskets</span>
             </div>
           </div>
         </div>

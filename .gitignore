@@ -3,33 +3,50 @@ node_modules
 .pnp
 .pnp.js
 
-# Production build
+# Production build & artifacts
 dist
 dist-ssr
+*.map
 
-# Local env files
+# Vercel deployment & project cache
+.vercel
+
+# Environment & Secret files
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.cert
+*.pfx
+*.p12
 
-# Logs
+# Logs & debugging
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Playwright MCP captures
+# Testing & captures
 .playwright-mcp
+coverage/
+.nyc_output
 
-# OS and Editor files
+# Python cache (scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS & Editor files
 .DS_Store
 ._*
+Thumbs.db
+.idea/
+.vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-

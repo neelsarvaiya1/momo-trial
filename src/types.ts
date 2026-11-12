@@ -3,14 +3,13 @@ export interface MenuItem {
   name: string
   category: 'steamed' | 'fried' | 'tandoori' | 'special'
   description: string
-  price: number
+  price: string // Exact '$-price' placeholder per master requirement
   isVeg: boolean
   spiciness: 1 | 2 | 3
   image: string
-  tags: string[]
-  pieces: number
-  dip: string
-  calories?: number
+  tags?: string[]
+  pieces?: number
+  dip?: string
 }
 
 export interface CartItem {
@@ -23,9 +22,8 @@ export interface CartItem {
 export interface IngredientFeature {
   id: string
   name: string
-  origin: string
+  origin?: string
   description: string
   badge: string
   image: string
 }
-

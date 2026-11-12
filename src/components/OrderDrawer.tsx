@@ -5,7 +5,6 @@ import {
   Minus,
   ShoppingBag,
   ArrowRight,
-  Sparkles,
   CheckCircle2,
   Clock,
   UtensilsCrossed,
@@ -31,22 +30,39 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
   const [orderState, setOrderState] = useState<'cart' | 'checkout' | 'confirmed'>('cart')
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
+  const [deliveryAddress, setDeliveryAddress] = useState('')
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('delivery')
+  const [formError, setFormError] = useState('')
 
   if (!isOpen) return null
 
-  const subtotal = items.reduce((sum, item) => sum + item.item.price * item.quantity, 0)
-  const deliveryFee = deliveryType === 'delivery' && subtotal > 0 ? 3.99 : 0
-  const tax = subtotal * 0.08875
-  const total = subtotal > 0 ? subtotal + deliveryFee + tax : 0
+  const itemCount = items.reduce((acc, i) => acc + i.quantity, 0)
 
   const handleProceedToCheckout = () => {
     playTactileClick()
+    setFormError('')
     setOrderState('checkout')
   }
 
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault()
+    const trimmedName = customerName.trim()
+    const trimmedPhone = customerPhone.trim()
+
+    // Validate name and phone
+    if (!trimmedName || trimmedName.length < 2) {
+      setFormError('Please enter a valid name (at least 2 characters).')
+      return
+    }
+
+    // Phone format: digits, spaces, hyphens, plus, parenthesis, between 7 and 20 chars
+    const phoneRegex = /^[\d\s\-+()]{7,20}$/
+    if (!trimmedPhone || !phoneRegex.test(trimmedPhone)) {
+      setFormError('Please enter a valid phone number for SMS order alerts.')
+      return
+    }
+
+    setFormError('')
     playAddSuccess()
     setOrderState('confirmed')
   }
@@ -57,6 +73,9 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
     if (orderState === 'confirmed') {
       onClearCart()
       setOrderState('cart')
+      setCustomerName('')
+      setCustomerPhone('')
+      setDeliveryAddress('')
     }
   }
 
@@ -112,7 +131,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                   Steamer is on the fire!
                 </h4>
                 <p className="font-sans text-sm text-deepCharcoal/70 mb-6 leading-relaxed">
-                  Thank you, <strong>{customerName || 'friend'}</strong>. Our chefs have begun rolling your fresh dough.
+                  Thank you, <strong>{customerName.trim() || 'friend'}</strong>. Our chefs have begun rolling your fresh dough.
                 </p>
 
                 <div className="bg-white p-5 rounded-2xl border border-doughCream text-left space-y-3 mb-8">
@@ -125,14 +144,14 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                     <span className="font-bold text-freshGreen">18 - 25 minutes</span>
                   </div>
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-doughCream">
-                    <span className="text-deepCharcoal/60">Total Paid</span>
-                    <span className="font-bold text-deepCharcoal tabular-nums">${total.toFixed(2)}</span>
+                    <span className="text-deepCharcoal/60">Estimated Total</span>
+                    <span className="font-bold text-deepCharcoal tabular-nums">$-price</span>
                   </div>
                 </div>
 
                 <button
                   onClick={handleCloseAndReset}
-                  className="btn-press w-full py-3.5 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase"
+                  className="btn-press w-full py-3.5 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase cursor-pointer"
                 >
                   Return to Menu
                 </button>
@@ -144,7 +163,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                   <button
                     type="button"
                     onClick={() => setDeliveryType('delivery')}
-                    className={`flex-1 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-colors ${
+                    className={`flex-1 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-colors cursor-pointer ${
                       deliveryType === 'delivery'
                         ? 'bg-deepCharcoal text-white'
                         : 'text-deepCharcoal/70'
@@ -155,7 +174,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                   <button
                     type="button"
                     onClick={() => setDeliveryType('pickup')}
-                    className={`flex-1 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-colors ${
+                    className={`flex-1 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-colors cursor-pointer ${
                       deliveryType === 'pickup'
                         ? 'bg-deepCharcoal text-white'
                         : 'text-deepCharcoal/70'
@@ -165,6 +184,12 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                   </button>
                 </div>
 
+                {formError && (
+                  <div className="p-3 rounded-xl bg-chiliRed/10 border border-chiliRed/20 text-xs text-chiliRed font-medium">
+                    {formError}
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-deepCharcoal/70 mb-1.5">
                     Your Full Name
@@ -172,8 +197,12 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                   <input
                     type="text"
                     required
+                    maxLength={80}
                     value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
+                    onChange={(e) => {
+                      setFormError('')
+                      setCustomerName(e.target.value)
+                    }}
                     placeholder="e.g. Priya Sharma"
                     className="w-full px-4 py-3 rounded-2xl bg-white border border-doughCream text-sm focus:outline-none focus:border-chiliRed"
                   />
@@ -186,8 +215,12 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                   <input
                     type="tel"
                     required
+                    maxLength={25}
                     value={customerPhone}
-                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    onChange={(e) => {
+                      setFormError('')
+                      setCustomerPhone(e.target.value)
+                    }}
                     placeholder="+1 (555) 000-0000"
                     className="w-full px-4 py-3 rounded-2xl bg-white border border-doughCream text-sm focus:outline-none focus:border-chiliRed"
                   />
@@ -199,6 +232,9 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                   </label>
                   <textarea
                     rows={2}
+                    maxLength={200}
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
                     placeholder="Street address or Table number"
                     className="w-full px-4 py-2.5 rounded-2xl bg-white border border-doughCream text-sm focus:outline-none focus:border-chiliRed"
                   />
@@ -214,16 +250,19 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                 <div className="pt-2 flex gap-3">
                   <button
                     type="button"
-                    onClick={() => setOrderState('cart')}
-                    className="btn-press px-4 py-3 rounded-full border border-doughCream text-xs font-bold uppercase"
+                    onClick={() => {
+                      setFormError('')
+                      setOrderState('cart')
+                    }}
+                    className="btn-press px-4 py-3 rounded-full border border-doughCream text-xs font-bold uppercase cursor-pointer"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
-                    className="btn-press flex-1 py-3.5 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase shadow-lg shadow-chiliRed/25"
+                    className="btn-press flex-1 py-3.5 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase shadow-lg shadow-chiliRed/25 cursor-pointer"
                   >
-                    Confirm & Send to Kitchen (${total.toFixed(2)})
+                    Confirm & Send to Kitchen ($-price)
                   </button>
                 </div>
               </form>
@@ -242,7 +281,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                 <a
                   href="#menu"
                   onClick={handleCloseAndReset}
-                  className="btn-press inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase"
+                  className="btn-press inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase cursor-pointer"
                 >
                   <span>Browse Menu</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -268,7 +307,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                           {cartItem.item.name}
                         </h4>
                         <span className="text-xs font-bold text-deepCharcoal tabular-nums">
-                          ${(cartItem.item.price * cartItem.quantity).toFixed(2)}
+                          {cartItem.item.price}
                         </span>
                       </div>
 
@@ -284,7 +323,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                               playTactileClick()
                               onUpdateQuantity(cartItem.item.id, -1)
                             }}
-                            className="btn-press w-6 h-6 rounded-full flex items-center justify-center text-deepCharcoal/70 hover:bg-doughCream/70"
+                            className="btn-press w-6 h-6 rounded-full flex items-center justify-center text-deepCharcoal/70 hover:bg-doughCream/70 cursor-pointer"
                             aria-label="Decrease quantity"
                           >
                             <Minus className="w-3 h-3" />
@@ -297,7 +336,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                               playTactileClick()
                               onUpdateQuantity(cartItem.item.id, 1)
                             }}
-                            className="btn-press w-6 h-6 rounded-full flex items-center justify-center text-deepCharcoal/70 hover:bg-doughCream/70"
+                            className="btn-press w-6 h-6 rounded-full flex items-center justify-center text-deepCharcoal/70 hover:bg-doughCream/70 cursor-pointer"
                             aria-label="Increase quantity"
                           >
                             <Plus className="w-3 h-3" />
@@ -316,19 +355,19 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
             <div className="p-6 border-t border-doughCream bg-white space-y-4">
               <div className="space-y-1.5 text-xs text-deepCharcoal/70">
                 <div className="flex justify-between">
-                  <span>Subtotal</span>
+                  <span>Selected Items</span>
                   <span className="font-semibold tabular-nums text-deepCharcoal">
-                    ${subtotal.toFixed(2)}
+                    {itemCount} {itemCount === 1 ? 'item' : 'items'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Estimated Tax</span>
-                  <span className="tabular-nums">${tax.toFixed(2)}</span>
+                  <span>Preparation</span>
+                  <span className="font-semibold text-freshGreen">Steamed fresh to order</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-doughCream text-sm font-bold text-deepCharcoal">
-                  <span>Estimated Total</span>
+                  <span>Menu Price</span>
                   <span className="tabular-nums text-chiliRed font-serif text-lg">
-                    ${total.toFixed(2)}
+                    $-price
                   </span>
                 </div>
               </div>
@@ -347,4 +386,3 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
     </div>
   )
 }
-

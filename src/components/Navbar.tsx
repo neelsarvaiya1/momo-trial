@@ -36,9 +36,12 @@ export const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
   const handleLinkClick = (href: string) => {
     playTactileClick()
     setMobileMenuOpen(false)
-    const el = document.querySelector(href)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+    if (href.startsWith('#')) {
+      const targetId = href.slice(1)
+      const el = document.getElementById(targetId)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
 
@@ -94,6 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
           <div className="flex items-center gap-3">
             {/* Order Momos Button */}
             <button
+              type="button"
               onClick={() => {
                 playTactileClick()
                 onOpenCart()
@@ -114,6 +118,7 @@ export const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
 
             {/* Mobile Menu Toggle Button */}
             <button
+              type="button"
               onClick={() => {
                 playTactileClick()
                 setMobileMenuOpen(!mobileMenuOpen)
@@ -151,6 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
 
           <div className="pt-6 border-t border-doughCream">
             <button
+              type="button"
               onClick={() => {
                 playTactileClick()
                 setMobileMenuOpen(false)

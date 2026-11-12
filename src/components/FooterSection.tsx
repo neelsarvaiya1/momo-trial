@@ -3,7 +3,6 @@ import {
   Instagram,
   MapPin,
   Clock,
-  Phone,
   Mail,
   ArrowRight,
   Sparkles,
@@ -21,17 +20,21 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email.trim() || !email.includes('@')) return
+    const sanitizedEmail = email.trim().toLowerCase()
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
+    if (!sanitizedEmail || !emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 100) {
+      return
+    }
 
     playAddSuccess()
     setIsSubscribed(true)
   }
 
   const galleryImages = [
-    { src: '/assets/steamer.jpg', alt: 'Bamboo steamer full of fresh momos' },
-    { src: '/assets/pleating.jpg', alt: 'Hand folding 24 pleats' },
-    { src: '/assets/plated.jpg', alt: 'Crispy fried golden momos' },
-    { src: '/assets/hero-close.jpg', alt: 'Steaming hot momo close up' },
+    { src: '/assets/social-momos-01.webp', alt: 'Bamboo steamer basket of freshly steamed momos' },
+    { src: '/assets/social-momos-02.webp', alt: 'Chili momos tossed in spicy aromatic glaze' },
+    { src: '/assets/social-momos-03.webp', alt: 'Golden crispy fried momos on ceramic plate' },
+    { src: '/assets/social-momos-04.webp', alt: 'Tandoori spiced momos fresh with mint chutney' },
   ]
 
   return (
@@ -59,6 +62,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
+              type="button"
               onClick={() => {
                 playTactileClick()
                 onOrderClick()
@@ -86,7 +90,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2 text-xs uppercase font-bold tracking-widest text-white/60">
               <Instagram className="w-4 h-4 text-chiliRed" />
-              <span>@MOMODINING • LIVE FROM OUR KITCHEN</span>
+              <span>MOMO CULINARY MOMENTS</span>
             </div>
             <a
               href="https://instagram.com"
@@ -134,7 +138,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
             </div>
 
             <p className="font-sans text-sm text-white/60 leading-relaxed max-w-sm mb-6">
-              Artisanal Himalayan dumplings hand-pinched with 24 pleats and steamed in bamboo. Sourced from local organic farms.
+              Artisanal dumplings folded fresh daily and steamed in traditional bamboo baskets. Handcrafted with honest ingredients.
             </p>
 
             {/* Newsletter Subscription */}
@@ -155,11 +159,15 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
+                    maxLength={100}
+                    autoComplete="email"
+                    spellCheck={false}
+                    aria-label="Email address for tasting table newsletter"
                     className="w-full px-4 py-2.5 rounded-full bg-white/5 border border-white/15 text-xs text-white placeholder-white/40 focus:outline-none focus:border-chiliRed transition-colors"
                   />
                   <button
                     type="submit"
-                    className="btn-press px-5 py-2.5 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase shrink-0"
+                    className="btn-press px-5 py-2.5 rounded-full bg-chiliRed text-white text-xs font-bold tracking-wider uppercase shrink-0 cursor-pointer"
                   >
                     Join
                   </button>
@@ -171,28 +179,22 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
           {/* Col 2: Locations & Dining (3 Cols) */}
           <div className="lg:col-span-3">
             <span className="text-xs uppercase font-bold tracking-widest text-white/50 block mb-4">
-              FLAGSHIP KITCHEN
+              LOCATIONS
             </span>
             <div className="space-y-3 text-sm text-white/80">
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-chiliRed mt-1 shrink-0" />
                 <span>
-                  74 Mercer Street, SoHo
+                  Locations to be announced
                   <br />
-                  New York, NY 10012
+                  <span className="text-white/50 text-xs">Flagship kitchen opening soon</span>
                 </span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-chiliRed shrink-0" />
-                <a href="tel:+12125550198" className="hover:text-chiliRed transition-colors">
-                  +1 (212) 555-0198
-                </a>
-              </div>
-              <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-chiliRed shrink-0" />
-                <a href="mailto:hello@momodining.com" className="hover:text-chiliRed transition-colors">
-                  hello@momodining.com
-                </a>
+                <span className="text-white/70">
+                  contact@momo.restaurant
+                </span>
               </div>
             </div>
           </div>
@@ -200,21 +202,14 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
           {/* Col 3: Hours (3 Cols) */}
           <div className="lg:col-span-3">
             <span className="text-xs uppercase font-bold tracking-widest text-white/50 block mb-4">
-              STEAMING HOURS
+              DINING HOURS
             </span>
             <div className="space-y-3 text-sm text-white/80">
               <div className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-chiliRed mt-0.5 shrink-0" />
                 <div>
-                  <span className="font-semibold block text-white">Monday to Thursday</span>
-                  <span className="text-white/60">11:30 AM to 10:00 PM</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-chiliRed mt-0.5 shrink-0" />
-                <div>
-                  <span className="font-semibold block text-white">Friday to Sunday</span>
-                  <span className="text-white/60">11:30 AM to 11:30 PM</span>
+                  <span className="font-semibold block text-white">Kitchen Hours</span>
+                  <span className="text-white/60">Opening hours to be announced</span>
                 </div>
               </div>
             </div>
@@ -243,12 +238,12 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
               </li>
               <li>
                 <a href="#ingredients" onClick={playTactileClick} className="hover:text-chiliRed transition-colors">
-                  Farm Ingredients
+                  Ingredients
                 </a>
               </li>
               <li>
                 <a href="#experience" onClick={playTactileClick} className="hover:text-chiliRed transition-colors">
-                  Imperial Momo
+                  Signature Momo
                 </a>
               </li>
             </ul>
@@ -259,13 +254,30 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onOrderClick }) =>
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-white/50 gap-4">
           <p>© {new Date().getFullYear()} MOMO Culinary Group Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">Dietary & Allergen Guide</a>
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0 text-xs text-white/50"
+            >
+              Privacy Policy
+            </button>
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0 text-xs text-white/50"
+            >
+              Terms of Service
+            </button>
+            <button
+              type="button"
+              onClick={(e) => e.preventDefault()}
+              className="hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0 text-xs text-white/50"
+            >
+              Dietary & Allergen Guide
+            </button>
           </div>
         </div>
       </div>
     </footer>
   )
 }
-

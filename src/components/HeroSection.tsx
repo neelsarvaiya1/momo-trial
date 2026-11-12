@@ -184,10 +184,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
           <div className="w-full flex items-center justify-between max-w-7xl mx-auto text-deepCharcoal/70 text-xs font-semibold tracking-widest uppercase">
             <div className="hidden sm:flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-freshGreen animate-ping" />
-              <span>Bamboo Steamer Active • 100°C</span>
+              <span>Handcrafted Daily • Steamed to Order</span>
             </div>
 
             <button
+              type="button"
               onClick={handleScrollDown}
               className="mx-auto sm:mx-0 flex flex-col items-center gap-2 group cursor-pointer hover:text-chiliRed transition-colors duration-200"
               aria-label="Scroll down to discover"
@@ -229,7 +230,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
               THE ARTISTRY
             </span>
             <h2 className="font-serif text-lg font-bold text-deepCharcoal mb-1">
-              24 Precision Pleats
+              Delicate Handmade Folds
             </h2>
             <p className="text-xs text-deepCharcoal/70 leading-relaxed font-sans">
               Each fold is individually pinched by hand, creating a sealed chamber that locks in hot savory broth and steam.
@@ -245,7 +246,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
         >
           <div className="max-w-2xl bg-white/90 backdrop-blur-lg border border-doughCream p-6 sm:p-8 rounded-3xl shadow-xl shadow-deepCharcoal/5">
             <span className="text-xs uppercase tracking-widest font-bold text-chiliRed block mb-2">
-              EVERY PLEAT PINCHED BY HAND
+              FRESHLY PREPARED DUMPLINGS
             </span>
             <h2 className="font-serif text-2xl sm:text-4xl font-bold text-deepCharcoal mb-3">
               Hot from the bamboo steamer.
@@ -256,6 +257,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
+                type="button"
                 onClick={onOrderClick}
                 className="btn-press w-full sm:w-auto px-7 py-3.5 rounded-full bg-chiliRed hover:bg-chiliRed-hover text-white font-semibold text-sm tracking-wider uppercase shadow-md shadow-chiliRed/25 cursor-pointer"
               >
@@ -276,6 +278,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderClick }) => {
         <div className="absolute bottom-6 right-6 z-30 flex items-center gap-3">
           {/* Audio Ambience Toggle */}
           <button
+            type="button"
             onClick={toggleSound}
             className="btn-press w-10 h-10 rounded-full bg-white/90 backdrop-blur-md border border-doughCream flex items-center justify-center text-deepCharcoal hover:text-chiliRed shadow-sm cursor-pointer"
             title={soundEnabled ? 'Mute Bamboo Steam Sound' : 'Unmute Bamboo Steam Sound'}

@@ -30,7 +30,7 @@ for (let i = 1; i <= totalFrames; i++) {
 }
 console.log(`✔ All ${totalFrames} mobile sequence frames verified in public/frames/mobile/`)
 
-// 4. Verify culinary imagery and poster assets
+// 4. Verify culinary imagery, poster assets, and new photography assets
 const requiredAssets = [
   'public/momo-poster.jpg',
   'public/momo-final.jpg',
@@ -40,6 +40,19 @@ const requiredAssets = [
   'public/assets/dough-roll.jpg',
   'public/assets/filling.jpg',
   'public/assets/hero-close.jpg',
+  // 12 Refined Food Photography Assets
+  'public/assets/steamed-veg-momos.webp',
+  'public/assets/steamed-chicken-momos.webp',
+  'public/assets/fried-momos.webp',
+  'public/assets/tandoori-momos.webp',
+  'public/assets/paneer-momos.webp',
+  'public/assets/chilli-momos.webp',
+  'public/assets/fried-chicken-momos.webp',
+  'public/assets/signature-momo.webp',
+  'public/assets/social-momos-01.webp',
+  'public/assets/social-momos-02.webp',
+  'public/assets/social-momos-03.webp',
+  'public/assets/social-momos-04.webp',
 ]
 
 for (const asset of requiredAssets) {
